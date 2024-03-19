@@ -2,16 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     public int speed = 5;
     public int easeSpeed = 1;
     public BalconyMovement BalconyMovement;
-    public GameObject selectedGameObject;
+    public Plot selectedPlot;
 
     private Transform _transform;
     private Rigidbody _rigidbody;
-    private GameObject _collidedGameObject;
     private Vector2 _movementDirection = Vector2.zero;
 
     private InputAction _moveAction;
@@ -39,34 +38,23 @@ public class Movement : MonoBehaviour
 
     public void PlayerInteract(InputAction.CallbackContext context)
     {
-        if(!selectedGameObject)
-            return;
-        if (selectedGameObject.GetComponent<Plot>())
-        {
-            selectedGameObject.GetComponent<Plot>().PlantASeed();
-        }
+        if(!selectedPlot) return;
+        
+        selectedPlot.PlantASeed();
     }
     
     public void PlayerFire(InputAction.CallbackContext context)
     {
         // this doesn't trigger for some reason after planting
-        if(!selectedGameObject)
-            return;
-        if (selectedGameObject.GetComponent<Plot>())
-        {
-            selectedGameObject.GetComponent<Plot>().HarvestPlant();
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision);
-        _collidedGameObject = collision.gameObject;
+        if(!selectedPlot) return;
+        
+        Debug.Log("harvesting");
+        selectedPlot.HarvestPlant();
     }
 
     private void Update()
     {
-        _movementDirection = _moveAction.ReadValue<Vector2>();
+        _movementDirection = _moveAction.ReadValue<Vector2>() * speed;
     }
 
     private void FixedUpdate()

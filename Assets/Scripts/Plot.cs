@@ -4,12 +4,8 @@ using UnityEngine.InputSystem;
 public class Plot : MonoBehaviour
 {
     public GameObject plantObj;
-    public BalconyMovement BalconyMovement;
-
-    private Movement _playerMovement;
-    private GameObject _playerGameObject;
-    private InputAction _interactAction;
-    private bool _isPlantPossible = false;
+    public Animator buttonPromptAnimator;
+    public bool isPlantPossible = false;
     private bool _isHarvestable = false;
 
     // MUST REFACTOR INTO TWO COMPONENTS
@@ -19,34 +15,11 @@ public class Plot : MonoBehaviour
     private void Awake()
     {
         plantObj.SetActive(false);
-        _playerGameObject = GameObject.FindWithTag("Player");
-        if (_playerGameObject)
-        {
-            _playerMovement = _playerGameObject.GetComponent<Movement>();            
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            _isPlantPossible = true;
-            _playerMovement.selectedGameObject = this.gameObject;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            _isPlantPossible = false;
-            _playerMovement.selectedGameObject = null;
-        }
     }
 
     public void PlantASeed()
     {
-        if(_isPlantPossible && !_isHarvestable)
+        if(isPlantPossible && !_isHarvestable)
         {
             plantObj.SetActive(true);
             _isHarvestable = true;
@@ -58,6 +31,8 @@ public class Plot : MonoBehaviour
         if(_isHarvestable)
         {
             plantObj.SetActive(false);
+            _isHarvestable = false;
         }
+        Debug.Log(this.gameObject);
     }
 }
